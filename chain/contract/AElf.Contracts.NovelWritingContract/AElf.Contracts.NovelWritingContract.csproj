@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <RootNamespace>AElf.Contracts.NovelWritingContract</RootNamespace>
+        <IsContract>true</IsContract>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <ContractReference Include="..\..\protobuf\token_contract.proto">
+            <Link>Protobuf\Proto\reference\token_contract.proto</Link>
+        </ContractReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ContractBase Include="..\..\protobuf\acs5.proto">
+            <Link>Protobuf\Proto\reference\acs5.proto</Link>
+        </ContractBase>
+        <ContractBase Include="..\..\protobuf\acs9.proto">
+            <Link>Protobuf\Proto\reference\acs9.proto</Link>
+        </ContractBase>
+        <ContractBase Include="..\..\protobuf\acs10.proto">
+            <Link>Protobuf\Proto\reference\acs10.proto</Link>
+        </ContractBase>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ContractCode Include="..\..\protobuf\novel_writing_contract.proto">
+            <Link>Protobuf\Proto\novel_writing_contract.proto</Link>
+        </ContractCode>
+    </ItemGroup>
+</Project>

@@ -1,0 +1,115 @@
+syntax = "proto3";
+
+import "aelf/core.proto";
+import "aelf/options.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "acs5.proto";
+import "acs9.proto";
+import "acs10.proto";
+
+option csharp_namespace = "AElf.Contracts.NovelWritingContract";
+
+service NovelWritingContract {
+    option (aelf.csharp_state) = "AElf.Contracts.NovelWritingContract.NovelWritingContractState";
+    option (aelf.base) = "acs5.proto";
+    option (aelf.base) = "acs9.proto";
+    option (aelf.base) = "acs10.proto";
+    
+    rpc Initialize (InitializeInput) returns (google.protobuf.Empty) {
+    }
+    
+    // For Writers
+    rpc CreateNewSet (CreateNewSetInput) returns (aelf.Hash) {
+    }
+    rpc Publish (PublishInput) returns (aelf.Hash) {
+    }
+    rpc Edit (EditInput) returns (google.protobuf.Empty) {
+    }
+    
+    // For Readers
+    rpc Subscribe (SubscribeInput) returns (google.protobuf.Empty) {
+    }
+    rpc Reward (RewardInput) returns (google.protobuf.Empty) {
+    }
+    
+    // Views
+    rpc GetAdminAddress (google.protobuf.Empty) returns (aelf.Address) {
+        option (aelf.is_view) = true;
+    }
+    rpc IsSubscribed (IsSubscribedInput) returns (google.protobuf.BoolValue) {
+        option (aelf.is_view) = true;
+    }
+    rpc GetProfile (aelf.Address) returns (Profile) {
+        option (aelf.is_view) = true;
+    }
+}
+
+message InitializeInput {
+    aelf.Address admin_address = 1;
+    string writer_token_symbol = 2;// 作者操作需要消耗的代币
+    string subscribe_token_symbol = 3;// 读者订阅需要消耗的代币
+}
+
+message CreateNewSetInput {
+    string set_name = 1;
+}
+
+message PublishInput {
+    aelf.Hash set_id = 1;
+    string novel_name = 2;
+    aelf.Hash novel_text_hash = 3;// 文章整体的哈希值，也可用于版权验证
+    int32 length = 4;// 文章长度，用于计算收费数额
+    string text = 5;// 文章全文（可选）
+}
+
+message EditInput {
+    aelf.Hash set_id = 1;
+    aelf.Hash novel_id = 2;// Publish后文章会获得唯一Id，见Publish交易的返回值
+    aelf.Hash novel_test_hash = 3;
+    string text = 4;
+}
+
+message SubscribeInput {
+    aelf.Hash novel_id = 1;
+    int64 willing_amount = 2;// 可选付费多少，多出的部分算作打赏
+}
+
+message RewardInput {
+    aelf.Hash novel_id = 1;
+    int64 amount = 2;// 不订阅，只打赏
+}
+
+message IsSubscribedInput {
+    aelf.Address user_address = 1;
+    aelf.Hash novel_id = 2;
+}
+
+// Data Structures.
+
+message NovelSetInfo {
+    aelf.Hash set_id = 1;
+    string set_name = 2;
+    google.protobuf.Timestamp create_time = 3;
+    int64 novel_count = 4;
+    aelf.Address set_owner = 5;
+}
+
+message NovelInfo {
+    aelf.Hash set_id = 1;
+    aelf.Hash novel_id = 2;
+    string novel_name = 3;
+    aelf.Address publisher_address = 4;
+    aelf.Hash novel_text_hash = 5;
+    int32 length = 6;
+    string text = 7;
+    google.protobuf.Timestamp publish_time = 8;
+    google.protobuf.Timestamp latest_edit_time = 9;
+}
+
+message Profile {
+    aelf.Address address = 1;
+    google.protobuf.Timestamp first_publish_time = 2;
+    google.protobuf.Timestamp first_subscribe_time = 3;
+    int64 points = 4;// 订阅可以获得积分，只是暂时还用不到
+}
