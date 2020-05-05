@@ -103,6 +103,17 @@ namespace AElf.Contracts.NovelWritingContract
 
             State.Profiles[Context.Sender] = profile;
 
+            Context.Fire(new NovelPublished
+            {
+                SetId = input.SetId,
+                Length = input.Length,
+                NovelId = novelId,
+                NovelName = input.NovelName,
+                NovelTextHash = input.NovelTextHash,
+                PublisherAddress = Context.Sender,
+                PublishTime = Context.CurrentBlockTime,
+            });
+
             return novelId;
         }
 

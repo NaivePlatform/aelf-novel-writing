@@ -133,4 +133,17 @@ message Profile {
     google.protobuf.Timestamp first_subscribe_time = 3;
     int64 points = 4;// 订阅可以获得积分，只是暂时还用不到
 }
+
+// Events
+
+message NovelPublished {
+    option (aelf.is_event) = true;
+    aelf.Hash set_id = 1;
+    aelf.Hash novel_id = 2;
+    string novel_name = 3;
+    aelf.Address publisher_address = 4;
+    aelf.Hash novel_text_hash = 5;
+    int32 length = 6;
+    google.protobuf.Timestamp publish_time = 7;
+}
 ```
